@@ -1,15 +1,15 @@
 var budgetController = (function () {
     
     var Income = function ( id, desc, value ) {
-        this.id = id,
-        this.description = desc,
-        this.value = value
+        this.id = id;
+        this.description = desc;
+        this.value = value;
     }
     
     var Expense = function ( id, desc, value ) {
-        this.id = id,
-        this.descriptio = desc,
-        this.value = value
+        this.id = id;
+        this.description = desc;
+        this.value = value;
     }
     
    //the data striucture that will hold all the records
@@ -50,9 +50,9 @@ var budgetController = (function () {
            //return the newly created item
            return newItem;
        },
-       testing: function() {
+       /* testing: function() {
            console.log(data);
-       }    
+       }    */
     };
     
 }) ();
@@ -65,7 +65,9 @@ var UIController = (function() {
         addType: '.add__type',
         addDesription: '.add__description',
         addValue: '.add__value',
-        addBtn: '.add__btn'
+        addBtn: '.add__btn',
+        incomeContainer: '.income__list',
+        expenseContainer: '.expenses__list'
     }
     
     return {
@@ -75,6 +77,35 @@ var UIController = (function() {
                 description: document.querySelector(DOMStrings.addDesription).value,
                 value: document.querySelector(DOMStrings.addValue).value
             };
+        },
+        
+        addItemsToList: function( obj, type ) {
+            var element, newHtml;
+            
+            if ( type === 'inc' ) {
+                element = DOMStrings.incomeContainer;
+                newHtml = '<div class="item clearfix" id="income-%id%"><div class="item__description">%desc%</div><div class="right clearfix"><div class="item__value">%val%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+                
+            } else if ( type === 'dec' ){
+                element = DOMStrings.expenseContainer;
+                newHtml = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%desc%</div><div class="right clearfix"><div class="item__value">%val%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            }
+            newHtml = newHtml.replace('%id%', obj.id);
+            newHtml = newHtml.replace('%desc%', obj.description);
+            newHtml = newHtml.replace('%val%', obj.value);
+            console.log(document.querySelector(element));
+            document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+        },
+        
+        clearInputFields: function () {
+            var fields = document.querySelectorAll( DOMStrings.addDesription + ', ' + DOMStrings.addValue );
+            var fieldsArr = Array.prototype.slice.call(fields);
+            fieldsArr.forEach(function ( current, index, array) {
+                current.value = '';
+            });
+            
+            fieldsArr[0].focus();
+            
         },
         
         getDOMStrings : function () {
@@ -110,7 +141,10 @@ var controller = (function ( bgContrl, uiCntrl) {
         
         // Add to ui list
         
+        uiCntrl.addItemsToList( item, inputData.type );
         
+        //Clear the input form fields
+        uiCntrl.clearInputFields();
         
         //Calculate budget
         
