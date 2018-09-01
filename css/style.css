@@ -63,6 +63,7 @@ body {
 .budget__expenses {
     padding: 12px;
     text-transform: uppercase;
+    border-radius: 10px;
 }
 
 
@@ -161,7 +162,7 @@ body {
     font-size: 35px;
     background: none;
     border: none;
-    color: #933;
+    color: #559e54;
     cursor: pointer;
     display: inline-block;
     vertical-align: middle;
@@ -175,10 +176,13 @@ body {
 .add__description:focus,
 .add__value:focus {
     outline: none;
-    border: 1px solid #933;
+    border: 1px solid #559e54;
 }
 
 .add__btn:focus { outline: none; }
+
+.maroon { color: #933 !important; }
+.maroon-focus:focus { border: 1px solid #933 !important; }
 
 
 /***** LISTS *****/
