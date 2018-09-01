@@ -140,8 +140,9 @@ var UIController = (function() {
         expenseElement: '.budget__expenses--value',
         percentageElement: '.budget__expenses--percentage',
         container: '.container',
-        expPercentage: '.item__percentage'
-    }
+        expPercentage: '.item__percentage',
+        title: '.budget__title--month'
+    };
     
     var formatNumbers = function (num, type){
         var splitArr, int, dec;
@@ -156,7 +157,13 @@ var UIController = (function() {
         }
         
         return (type === 'inc' ? '+' : '-') + ' ' + int + '.' + dec;
-    }
+    };
+    
+    var nodeListForEach = function(fieldsArr, callback){
+        for( var i = 0; i < fieldsArr.length; i++ ){
+            callback(fieldsArr[i], i);
+        }
+    };
     
     return {
         getInputData: function() {
@@ -220,14 +227,10 @@ var UIController = (function() {
         },
         
         displayPercentage: function(percentages) {
-            var fields, nodeListForEach;
+            var fields;
             
             fields = document.querySelectorAll(DOMStrings.expPercentage);
-            nodeListForEach = function(fieldsArr, callback){
-                for( var i = 0; i < fieldsArr.length; i++ ){
-                    callback(fieldsArr[i], i);
-                }
-            };
+            
             
             nodeListForEach(fields, function(curr, index){
                 if(percentages[index] > 0) {
@@ -237,6 +240,26 @@ var UIController = (function() {
                 }
             });
         
+        },
+        
+        displayDate: function(){
+            var now, month, months, year;
+            months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            now = new Date();
+            month = months[now.getMonth()];
+            year = now.getFullYear();
+            
+            document.querySelector(DOMStrings.title).textContent = month + ', ' + year;
+        },
+        
+        changeDisplayType: function() {
+            var fields;
+            fields = document.querySelectorAll( DOMStrings.addType + ',' + DOMStrings.addDesription + ',' + DOMStrings.addValue);
+            nodeListForEach(fields, function(curr){
+                curr.classList.toggle('maroon-focus');
+            });
+            
+            document.querySelector(DOMStrings.addBtn).classList.toggle('maroon');
         },
         
         getDOMStrings : function () {
@@ -259,6 +282,7 @@ var controller = (function ( bgContrl, uiCntrl) {
         });
         
         document.querySelector(DOM.container).addEventListener('click', deleteItem);
+        document.querySelector(DOM.addType).addEventListener('change', uiCntrl.changeDisplayType);
     };
     
     
@@ -335,6 +359,7 @@ var controller = (function ( bgContrl, uiCntrl) {
         
     return {
         init: function () {
+            uiCntrl.displayDate();
             uiCntrl.displayBudget( {
                 income: 0,
                 expenses: 0,
